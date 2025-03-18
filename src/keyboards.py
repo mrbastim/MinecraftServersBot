@@ -10,14 +10,21 @@ main_menu = ReplyKeyboardMarkup(
         ]
     ],
     resize_keyboard=True,
-    input_field_placeholder="Выберите действие..."
+    input_field_placeholder="Выберите действие...", 
+    is_persistent=False,
+    one_time_keyboard=True
 )
 
 async def get_server_list_keyboard():
     servers = await ServiceManager.get_servers()
     keyboard = InlineKeyboardBuilder()
     for server in servers:
-        keyboard.add(InlineKeyboardButton(text=server.name + "\n {}".format(ServiceManager(server.name).get_status()[0]), callback_data=server.name))
+        keyboard.add(InlineKeyboardButton(
+            text=server.name + "\n {}".format(ServiceManager(server.name).get_status()[0]), 
+            callback_data=server.name
+            )
+        )
+    keyboard.add(InlineKeyboardButton(text="Главное меню", callback_data="return_to_main_menu"))
     return keyboard.adjust(2).as_markup()
 
 async def get_choice_keyboard(server_name: str):

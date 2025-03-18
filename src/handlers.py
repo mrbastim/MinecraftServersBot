@@ -61,6 +61,11 @@ async def server_list_handler(message: Message):
 async def server_info_handler(message: Message):
     await send_system_info(await message.answer("Получение информации..."))
 
+@router.callback_query(lambda callback: callback.data == "return_to_main_menu")
+async def return_to_main_menu_handler(callback: CallbackQuery):
+    await callback.message.answer("Выберите действие...", reply_markup=keyboards.main_menu)
+    await callback.answer()
+
 @router.callback_query(lambda callback: callback.data == "back_to_services")
 async def back_to_services_handler(callback: CallbackQuery):
     await callback.message.edit_text("Выберите сервер:", reply_markup=await keyboards.get_server_list_keyboard())
