@@ -19,7 +19,13 @@ class ServiceManager:
                 stderr=subprocess.PIPE,
                 text=True
             )
-            return result.stdout.strip()
+            if result.returncode == 0:
+                return "🟢 Active"
+            elif result.returncode == 3:
+                return "🔴 Inactive"
+            else:
+                return "Unknown"
+            # return result.stdout.strip()
         except Exception as e:
             return f"Error checking status: {e}"
 

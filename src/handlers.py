@@ -61,7 +61,12 @@ async def server_list_handler(message: Message):
 async def server_info_handler(message: Message):
     await send_system_info(await message.answer("Получение информации..."))
 
-@router.callback_query(lambda callback: not (callback.data.startswith("start_") or callback.data.startswith("stop_")))
+@router.callback_query(lambda callback: callback.data == "back_to_services")
+async def back_to_services_handler(callback: CallbackQuery):
+    await callback.message.edit_text("Выберите сервер:", reply_markup=await keyboards.get_server_list_keyboard())
+    await callback.answer()
+
+@router.callback_query(lambda callback: callback.data.endswith("Server"))
 async def process_server_callback(callback: CallbackQuery):
     server_name = callback.data
     server = ServiceManager(server_name)
@@ -99,3 +104,4 @@ async def stop_server_handler(callback: CallbackQuery):
         reply_markup=choice_keyboard
     )
     await callback.answer()
+

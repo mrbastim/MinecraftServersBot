@@ -17,7 +17,7 @@ async def get_server_list_keyboard():
     servers = await ServiceManager.get_servers()
     keyboard = InlineKeyboardBuilder()
     for server in servers:
-        keyboard.add(InlineKeyboardButton(text=server.name, callback_data=server.name))
+        keyboard.add(InlineKeyboardButton(text=server.name + "\n {}".format(ServiceManager(server.name).get_status()[0]), callback_data=server.name))
     return keyboard.adjust(2).as_markup()
 
 async def get_choice_keyboard(server_name: str):
@@ -25,5 +25,8 @@ async def get_choice_keyboard(server_name: str):
     keyboard.add(
         InlineKeyboardButton(text="Запустить сервер", callback_data=f"start_{server_name}"),
         InlineKeyboardButton(text="Остановить сервер", callback_data=f"stop_{server_name}")
+    )
+    keyboard.add(
+        InlineKeyboardButton(text="Назад", callback_data="back_to_services")
     )
     return keyboard.adjust(2).as_markup()
